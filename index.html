@@ -214,7 +214,7 @@
             padding: 40px;
             opacity: 0;
             transition: all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            z-index: 15; /* Increased z-index to stay above disappearing envelope */
+            z-index: 15; /* High enough to stay above the disappearing envelope */
             overflow-y: auto;
         }
 
@@ -391,7 +391,6 @@
         <div class="envelope-wrapper" id="envelopeWrapper">
             <div class="envelope">
                 <div class="envelope-flap"></div>
-                
                 <div class="wax-seal">🎂</div>
             </div>
 
@@ -406,7 +405,6 @@
                 <div class="image-gallery">
                     <div class="image-placeholder landscape">
                         <img src="Landscape (Syaz).jpeg" alt="Memory" style="width: 100%; height: 180px; object-fit: cover; border-radius: 12px;">
-
                     </div>
                     <div class="image-placeholder portrait">
                         <img src="Potrait (Syaz).jpeg" alt="Memory" style="width: 150px; height: 220px; object-fit: cover; border-radius: 12px;">
@@ -435,15 +433,12 @@
                 this.element.className = 'butterfly';
                 this.element.innerHTML = '<svg><use href="#butterfly-shape"/></svg>';
                 
-                // Random starting position
                 this.x = Math.random() * window.innerWidth;
                 this.y = Math.random() * window.innerHeight;
                 
-                // Random velocity
                 this.vx = (Math.random() - 0.5) * 2;
                 this.vy = (Math.random() - 0.5) * 2;
                 
-                // Random flutter parameters
                 this.flutterSpeed = 0.05 + Math.random() * 0.05;
                 this.flutterAmount = 10 + Math.random() * 10;
                 this.angle = Math.random() * Math.PI * 2;
@@ -455,45 +450,37 @@
             }
 
             update(mouseX, mouseY) {
-                // Mouse interaction
                 const dx = mouseX - this.x;
                 const dy = mouseY - this.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
                 
                 if (distance < 150) {
-                    // Flee from mouse
                     this.vx -= dx / distance * 0.5;
                     this.vy -= dy / distance * 0.5;
                 }
                 
-                // Flutter motion
                 this.angle += this.flutterSpeed;
                 this.vx += Math.cos(this.angle) * 0.1;
                 this.vy += Math.sin(this.angle) * 0.1;
                 
-                // Apply velocity with damping
                 this.x += this.vx;
                 this.y += this.vy;
                 this.vx *= 0.95;
                 this.vy *= 0.95;
                 
-                // Boundary wrapping
                 if (this.x < -50) this.x = window.innerWidth + 50;
                 if (this.x > window.innerWidth + 50) this.x = -50;
                 if (this.y < -50) this.y = window.innerHeight + 50;
                 if (this.y > window.innerHeight + 50) this.y = -50;
                 
-                // Update position
                 this.element.style.left = this.x + 'px';
                 this.element.style.top = this.y + 'px';
                 
-                // Rotation based on velocity
                 const rotation = Math.atan2(this.vy, this.vx) * (180 / Math.PI);
                 this.element.style.transform = `rotate(${rotation}deg)`;
             }
         }
 
-        // Initialize Butterflies
         const butterfliesContainer = document.getElementById('butterflies-container');
         const butterflies = [];
         const butterflyCount = 5;
@@ -502,7 +489,6 @@
             butterflies.push(new Butterfly(butterfliesContainer));
         }
 
-        // Mouse tracking
         let mouseX = window.innerWidth / 2;
         let mouseY = window.innerHeight / 2;
 
@@ -511,7 +497,6 @@
             mouseY = e.clientY;
         });
 
-        // Animation loop
         function animate() {
             butterflies.forEach(butterfly => {
                 butterfly.update(mouseX, mouseY);
@@ -520,7 +505,6 @@
         }
         animate();
 
-        // Envelope Interaction
         const envelopeWrapper = document.getElementById('envelopeWrapper');
         const closeButton = document.getElementById('closeButton');
         let isOpened = false;
@@ -538,12 +522,10 @@
             envelopeWrapper.classList.remove('opened');
         });
 
-        // Prevent card clicks from closing
         document.getElementById('birthdayCard').addEventListener('click', (e) => {
             e.stopPropagation();
         });
 
-        // Responsive handling
         window.addEventListener('resize', () => {
             butterflies.forEach(butterfly => {
                 if (butterfly.x > window.innerWidth) butterfly.x = window.innerWidth - 50;
@@ -553,4 +535,3 @@
     </script>
 </body>
 </html>
-
